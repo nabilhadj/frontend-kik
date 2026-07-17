@@ -12,6 +12,13 @@ export type Product = {
   badge?: string;
   description: string;
   features: string[];
+  customFields?: {
+    id: number;
+    name: string;
+    field_type: string;
+    is_required: boolean;
+    options: { id: number; value: string }[];
+  }[];
 };
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -124,7 +131,8 @@ export function mapProduct(bp: BackendProduct): Product {
       "جودة عالية مضمونة",
       "تصميم مريح وأنيق",
       "متين ومقاوم للاستخدام اليومي"
-    ] : [])
+    ] : []),
+    customFields: bp.custom_fields
   };
 }
 

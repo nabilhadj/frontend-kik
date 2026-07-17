@@ -10,7 +10,7 @@ export default function CartPage() {
   const { items, removeItem, updateQty, total, clearCart } = useCart();
   const router = useRouter();
 
-  const shipping = total >= 5000 ? 0 : 600;
+  const shipping = 600;
   const grandTotal = total + shipping;
 
   if (items.length === 0) {
@@ -118,16 +118,10 @@ export default function CartPage() {
             </div>
             <div className="summary-row">
               <span style={{ color: 'var(--on-surface-variant)' }}>رسوم الشحن</span>
-              <span style={{ fontWeight: 600, color: shipping === 0 ? '#22c55e' : 'inherit' }}>
-                {shipping === 0 ? 'مجاناً' : `${shipping} د.ج`}
+              <span style={{ fontWeight: 600 }}>
+                {shipping} د.ج
               </span>
             </div>
-            {shipping > 0 && (
-              <div style={{ padding: '8px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 14, color: 'var(--primary)' }}>info</span>
-                <span style={{ fontSize: 12, color: 'var(--primary)' }}>أضف {5000 - total} د.ج للحصول على شحن مجاني</span>
-              </div>
-            )}
             <div className="summary-row">
               <span>الإجمالي</span>
               <span>{grandTotal} د.ج</span>

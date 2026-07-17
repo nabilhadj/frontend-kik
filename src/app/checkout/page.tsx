@@ -88,6 +88,7 @@ export default function CheckoutPage() {
                 clearCart();
               }}
               source="website"
+              customFields={items.length > 0 ? items[0].customFields : undefined}
             />
 
           </div>
