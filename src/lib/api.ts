@@ -138,7 +138,7 @@ export async function fetchProducts(categorySlug?: string, searchQuery?: string)
       url.searchParams.append('search', searchQuery);
     }
 
-    const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch products');
     const data = await res.json();
     
@@ -153,7 +153,7 @@ export async function fetchProducts(categorySlug?: string, searchQuery?: string)
 
 export async function fetchProductById(idOrSlug: string): Promise<BackendProduct | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/products/${idOrSlug}/`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/api/products/${idOrSlug}/`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch product details');
     const data = await res.json();
     return data;
@@ -210,7 +210,7 @@ export async function fetchLandingPage(idOrSlug: string): Promise<BackendLanding
 
 export async function fetchDeliveryConfig(): Promise<DeliveryConfig | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/orders/delivery-config/`);
+    const res = await fetch(`${API_BASE_URL}/api/orders/delivery-config/`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch delivery config');
     const data = await res.json();
     if (data.success) {
@@ -273,7 +273,7 @@ export interface Category {
 
 export async function fetchCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/categories/`);
+    const res = await fetch(`${API_BASE_URL}/api/categories/`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch categories');
     const data = await res.json();
     return data.results || data;
