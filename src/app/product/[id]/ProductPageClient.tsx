@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
@@ -37,7 +37,9 @@ export default function ProductPageClient({ product, backendColors, relatedProdu
     setTimeout(() => setToast(''), 2500);
   };
 
-  const getProductImage = () => {
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+
+  useEffect(() => {
     if (backendColors.length > 0 && selectedColor) {
       const col = backendColors.find(c => c.name === selectedColor);
       if (col && col.image_url) {
@@ -45,11 +47,14 @@ export default function ProductPageClient({ product, backendColors, relatedProdu
         if (!img.startsWith('http') && !img.startsWith('//')) {
           img = `${API_BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
         }
-        return img;
+        setActiveImage(img);
+        return;
       }
     }
-    return product.image;
-  };
+    setActiveImage(product.images && product.images.length > 0 ? product.images[0] : product.image);
+  }, [selectedColor, backendColors, product.image, product.images]);
+
+  const currentImage = activeImage || (product.images && product.images.length > 0 ? product.images[0] : product.image);
 
   const handleAddToCart = () => {
     for (let i = 0; i < qty; i++) addItem(product, selectedColor);
@@ -77,20 +82,41 @@ export default function ProductPageClient({ product, backendColors, relatedProdu
 
         <div className="lg:flex lg:gap-12 lg:items-start lg:mt-6">
           {/* Product Image */}
-          <div className="product-detail-image lg:flex-1 lg:max-w-[50%]" style={{ margin: '0 var(--margin-mobile)', borderRadius: 20, overflow: 'hidden', position: 'relative', minHeight: 300 }}>
-            {product.badge && <span className="product-badge" style={{ top: 12, right: 12, fontSize: 12, padding: '4px 12px', zIndex: 10 }}>{product.badge}</span>}
-            {getProductImage() ? (
-              <Image 
-                src={getProductImage() || ''} 
-                alt={product.name} 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                style={{ objectFit: 'cover' }} 
-                priority
-              />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-container-low)', position: 'absolute', inset: 0 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 64, color: 'var(--outline-variant)' }}>image</span>
+          <div className="product-detail-image-container lg:flex-1 lg:max-w-[50%]" style={{ margin: '0 var(--margin-mobile)' }}>
+            <div style={{ borderRadius: 20, overflow: 'hidden', position: 'relative', minHeight: 300, aspectRatio: '1/1', width: '100%' }}>
+              {product.badge && <span className="product-badge" style={{ top: 12, right: 12, fontSize: 12, padding: '4px 12px', zIndex: 10 }}>{product.badge}</span>}
+              {currentImage ? (
+                <Image 
+                  src={currentImage} 
+                  alt={product.name} 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  style={{ objectFit: 'cover' }} 
+                  priority
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-container-low)', position: 'absolute', inset: 0 }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 64, color: 'var(--outline-variant)' }}>image</span>
+                </div>
+              )}
+            </div>
+
+            {/* Gallery Thumbnails */}
+            {product.images && product.images.length > 1 && (
+              <div style={{ display: 'flex', gap: 12, marginTop: 16, overflowX: 'auto', paddingBottom: 8 }}>
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveImage(img)}
+                    style={{
+                      width: 70, height: 70, flexShrink: 0, borderRadius: 12, overflow: 'hidden', position: 'relative',
+                      border: `2px solid ${activeImage === img ? 'var(--primary)' : 'transparent'}`,
+                      background: 'var(--surface-container-low)', cursor: 'pointer', padding: 0
+                    }}
+                  >
+                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill sizes="70px" style={{ objectFit: 'cover' }} />
+                  </button>
+                ))}
               </div>
             )}
           </div>

@@ -12,6 +12,7 @@ export type Product = {
   badge?: string;
   description: string;
   features: string[];
+  images?: string[];
   customFields?: {
     id: number;
     name: string;
@@ -114,6 +115,24 @@ export function mapProduct(bp: BackendProduct): Product {
   // Map colors name list if colors detail array exists
   const colorsList = bp.colors ? bp.colors.map(c => c.hex_code || c.name) : [];
 
+  let allImages: string[] = [];
+  if (bp.images && bp.images.length > 0) {
+    // sort by order, then map
+    const sortedImages = [...bp.images].sort((a, b) => (a.order || 0) - (b.order || 0));
+    allImages = sortedImages.map(imgObj => {
+      let url = imgObj.image_url;
+      if (url && !url.startsWith('http') && !url.startsWith('//')) {
+        url = `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+      }
+      if (url && API_BASE_URL.includes('localhost')) {
+        url = url.replace('127.0.0.1', 'localhost');
+      }
+      return url;
+    });
+  } else if (img) {
+    allImages = [img];
+  }
+
   return {
     id: bp.id,
     name: bp.name,
@@ -132,7 +151,8 @@ export function mapProduct(bp: BackendProduct): Product {
       "تصميم مريح وأنيق",
       "متين ومقاوم للاستخدام اليومي"
     ] : []),
-    customFields: bp.custom_fields
+    customFields: bp.custom_fields,
+    images: allImages
   };
 }
 
