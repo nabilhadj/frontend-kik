@@ -1,11 +1,11 @@
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
-import HomePageClient from './HomePageClient';
+import StorePageClient from './StorePageClient';
 import { fetchProducts, fetchCategories, type Product } from '@/lib/api';
+import { Suspense } from 'react';
 
-// This is a Server Component, meaning it will fetch data directly on the server 
-// and pass it to the Client Component, resulting in a significantly faster LCP.
-export default async function Home() {
+// Wrap the client component in Suspense since it uses useSearchParams
+export default async function StorePage() {
   let products: Product[] = [];
   let categories = [
     { name: 'الكل', slug: 'all', icon: 'grid_view' }
@@ -35,10 +35,12 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <HomePageClient 
-        initialProducts={products} 
-        initialCategories={categories} 
-      />
+      <Suspense fallback={<main className="page-wrapper"><div className="empty-state"><span className="material-symbols-outlined" style={{ animation: 'spin 1.5s linear infinite' }}>sync</span></div></main>}>
+        <StorePageClient 
+          initialProducts={products} 
+          initialCategories={categories} 
+        />
+      </Suspense>
       <BottomNav />
     </>
   );
