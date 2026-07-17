@@ -3,9 +3,6 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-// Use standard img tag without next/image overhead for lightning fast LCP
-// We can use an unoptimized img tag to avoid Vercel's slow image optimization for external images
-
 import LPTimer from './components/LPTimer';
 import LPFloatingActions from './components/LPFloatingActions';
 import LPCheckoutWrapper from './components/LPCheckoutWrapper';
@@ -44,159 +41,139 @@ export default async function LandingPage({ params }: { params: Promise<{ id: st
     : 0;
 
   return (
-    <main className="lp-container" style={{ minHeight: '100vh', background: '#f8fafc', direction: 'rtl', paddingBottom: 100, '--primary': themeColor } as React.CSSProperties}>
+    <main className="lp-container" style={{ minHeight: '100vh', background: '#ffffff', direction: 'rtl', paddingBottom: 100, '--primary': themeColor } as React.CSSProperties}>
       
       {/* Hero Section */}
-      <section style={{ background: 'var(--surface)', borderBottomLeftRadius: 32, borderBottomRightRadius: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto', padding: '0 20px' }}>
-          <div style={{ position: 'relative', width: '100%', height: '50vh', minHeight: 400, backgroundColor: '#e2e8f0', borderBottomLeftRadius: 24, borderBottomRightRadius: 24, overflow: 'hidden' }}>
-            {lpConfig.main_image_url ? (
-              // Using native img for the hero image guarantees immediate load without Vercel processing overhead
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={lpConfig.main_image_url}
-                alt={product.name}
-                fetchPriority="high"
-                style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }}
-              />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 64, color: '#94a3b8' }}>image</span>
-              </div>
-            )}
-
-            <div style={{ position: 'absolute', top: 20, right: 20 }}>
-              <Link href="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, background: 'rgba(255,255,255,0.9)', borderRadius: 22, color: 'var(--on-surface)', textDecoration: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backdropFilter: 'blur(8px)' }}>
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </Link>
+      <section style={{ width: '100%', maxWidth: 600, margin: '0 auto', position: 'relative' }}>
+        <div style={{ width: '100%', backgroundColor: '#f8fafc', overflow: 'hidden' }}>
+          {lpConfig.main_image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={lpConfig.main_image_url}
+              alt={product.name}
+              fetchPriority="high"
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          ) : (
+            <div style={{ width: '100%', height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 64, color: '#94a3b8' }}>image</span>
             </div>
+          )}
+
+          <div style={{ position: 'absolute', top: 20, right: 20 }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, background: 'rgba(255,255,255,0.9)', borderRadius: 22, color: 'var(--on-surface)', textDecoration: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backdropFilter: 'blur(8px)' }}>
+              <span className="material-symbols-outlined">arrow_forward</span>
+            </Link>
           </div>
         </div>
 
-        <div style={{ padding: '16px 20px 24px', maxWidth: 600, margin: '0 auto' }}>
-          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-
-            {/* Top row: Stars & Timer */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, paddingBottom: 16, borderBottom: '1px dashed #cbd5e1' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div style={{ display: 'flex', color: '#f59e0b', fontSize: 18 }}>
-                  {'★'.repeat(5)}
-                </div>
-                <span style={{ fontSize: 13, color: '#64748b', fontWeight: 600 }}>(4.9/5)</span>
+        <div style={{ padding: '24px 20px', borderBottom: '1px solid #e2e8f0' }}>
+          {/* Top row: Stars & Timer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ display: 'flex', color: '#f59e0b', fontSize: 18 }}>
+                {'★'.repeat(5)}
               </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fee2e2', color: '#ef4444', padding: '6px 12px', borderRadius: 10, fontSize: 14, fontWeight: 700, direction: 'ltr' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>timer</span>
-                <LPTimer />
-              </div>
+              <span style={{ fontSize: 13, color: '#64748b', fontWeight: 600 }}>(4.9/5)</span>
             </div>
 
-            {/* Bottom row: Price */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: 42, fontWeight: 900, color: themeColor, lineHeight: 1 }}>
-                  {product.price} <span style={{ fontSize: 20, fontWeight: 700 }}>د.ج</span>
-                </div>
-              </div>
-
-              {(lpConfig.old_price || product.oldPrice) && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <div style={{ fontSize: 13, color: '#64748b', marginBottom: 4, fontWeight: 600 }}>السعر السابق</div>
-                  <div style={{ fontSize: 18, color: '#94a3b8', textDecoration: 'line-through', fontWeight: 700, lineHeight: 1 }}>
-                    {lpConfig.old_price || product.oldPrice} د.ج
-                  </div>
-                  {savingsPercent > 0 && (
-                    <div style={{ background: '#10b981', color: 'white', fontSize: 12, fontWeight: 800, padding: '4px 8px', borderRadius: 6, marginTop: 8 }}>
-                      توفير {savingsPercent}%
-                    </div>
-                  )}
-                </div>
-              )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fee2e2', color: '#ef4444', padding: '6px 12px', borderRadius: 10, fontSize: 14, fontWeight: 700, direction: 'ltr' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }}>timer</span>
+              <LPTimer />
             </div>
-
           </div>
 
+          {/* Bottom row: Price */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ fontSize: 42, fontWeight: 900, color: themeColor, lineHeight: 1 }}>
+                {product.price} <span style={{ fontSize: 20, fontWeight: 700 }}>د.ج</span>
+              </div>
+            </div>
+
+            {(lpConfig.old_price || product.oldPrice) && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <div style={{ fontSize: 13, color: '#64748b', marginBottom: 4, fontWeight: 600 }}>السعر السابق</div>
+                <div style={{ fontSize: 18, color: '#94a3b8', textDecoration: 'line-through', fontWeight: 700, lineHeight: 1 }}>
+                  {lpConfig.old_price || product.oldPrice} د.ج
+                </div>
+                {savingsPercent > 0 && (
+                  <div style={{ background: '#10b981', color: 'white', fontSize: 12, fontWeight: 800, padding: '4px 8px', borderRadius: 6, marginTop: 8 }}>
+                    توفير {savingsPercent}%
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '0 20px' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
         
         {/* Checkout Form Section wrapper */}
-        <section style={{ marginTop: -30, position: 'relative', zIndex: 10 }}>
+        <section style={{ padding: '24px 16px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
           <LPCheckoutWrapper product={product} config={lpConfig} />
         </section>
 
         {/* Trust Badges */}
-        <section style={{ display: 'flex', justifyContent: 'space-between', gap: 12, margin: '32px 0' }}>
-          <div style={{ flex: 1, background: 'var(--surface)', borderRadius: 16, padding: '16px 8px', textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+        <section style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '24px 20px', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ flex: 1, textAlign: 'center' }}>
             <span className="material-symbols-outlined" style={{ fontSize: 32, color: '#eab308', marginBottom: 8, fontVariationSettings: "'FILL' 1" }}>verified</span>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--on-surface)' }}>جودة مضمونة</div>
           </div>
-          <div style={{ flex: 1, background: 'var(--surface)', borderRadius: 16, padding: '16px 8px', textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ flex: 1, textAlign: 'center' }}>
             <span className="material-symbols-outlined" style={{ fontSize: 32, color: '#3b82f6', marginBottom: 8, fontVariationSettings: "'FILL' 1" }}>local_shipping</span>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--on-surface)' }}>توصيل سريع</div>
           </div>
-          <div style={{ flex: 1, background: 'var(--surface)', borderRadius: 16, padding: '16px 8px', textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ flex: 1, textAlign: 'center' }}>
             <span className="material-symbols-outlined" style={{ fontSize: 32, color: '#22c55e', marginBottom: 8, fontVariationSettings: "'FILL' 1" }}>currency_exchange</span>
             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--on-surface)' }}>دفع عند الاستلام</div>
           </div>
         </section>
 
         {/* Benefit Section (Title 1 & Image 2) */}
-        <section style={{ margin: '40px 0', background: 'var(--surface)', borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
-          <div style={{ padding: '32px 24px', textAlign: 'center' }}>
+        <section style={{ padding: '32px 0 0 0', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '0 24px 32px 24px', textAlign: 'center' }}>
             <h2 style={{ fontFamily: 'Be Vietnam Pro', fontSize: 24, fontWeight: 800, color: 'var(--on-surface)', marginBottom: 16 }}>{lpConfig.title_1 || 'لماذا ستحب هذا المنتج؟'}</h2>
             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
               {lpConfig.description_1 || 'تصميم عصري وجودة لا تضاهى، صمم خصيصاً ليناسب احتياجاتك اليومية ويوفر لك الراحة التامة.'}
             </p>
           </div>
-          <div style={{ width: '100%', height: 300, position: 'relative', backgroundColor: '#f1f5f9' }}>
-            {lpConfig.image_2_url ? (
+          <div style={{ width: '100%', backgroundColor: '#f8fafc' }}>
+            {lpConfig.image_2_url && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={lpConfig.image_2_url} alt="Benefit" style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} loading="lazy" />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', flexDirection: 'column' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 48, marginBottom: 8 }}>photo_camera</span>
-                <span style={{ fontSize: 14 }}>صورة توضيحية 2 (قم بإضافتها من لوحة التحكم)</span>
-              </div>
+              <img src={lpConfig.image_2_url} alt="Benefit" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
             )}
           </div>
         </section>
 
         {/* Details Section (Title 2 & Image 3) */}
-        <section style={{ margin: '40px 0', background: 'var(--surface)', borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
-          <div style={{ padding: '32px 24px', textAlign: 'center' }}>
+        <section style={{ padding: '32px 0 0 0', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '0 24px 32px 24px', textAlign: 'center' }}>
             <h2 style={{ fontFamily: 'Be Vietnam Pro', fontSize: 24, fontWeight: 800, color: 'var(--on-surface)', marginBottom: 16 }}>{lpConfig.title_2 || 'تفاصيل تصنع الفارق'}</h2>
             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
               {lpConfig.description_2 || 'تم تصميم هذا المنتج بعناية فائقة ليلبي جميع احتياجاتك ويوفر لك أفضل تجربة ممكنة.'}
             </p>
           </div>
-          <div style={{ width: '100%', height: 300, position: 'relative', backgroundColor: '#f1f5f9' }}>
-            {lpConfig.image_3_url ? (
+          <div style={{ width: '100%', backgroundColor: '#f8fafc' }}>
+            {lpConfig.image_3_url && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={lpConfig.image_3_url} alt="Details" style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} loading="lazy" />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', flexDirection: 'column' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 48, marginBottom: 8 }}>photo_camera</span>
-                <span style={{ fontSize: 14 }}>صورة توضيحية 3 (قم بإضافتها من لوحة التحكم)</span>
-              </div>
+              <img src={lpConfig.image_3_url} alt="Details" style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
             )}
           </div>
         </section>
 
         {/* Section 3 (Extra details) */}
         {(lpConfig.title_3 || lpConfig.description_3) && (
-          <section style={{ margin: '40px 0', background: 'var(--surface)', borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}>
-            <div style={{ padding: '32px 24px', textAlign: 'center' }}>
-              {lpConfig.title_3 && (
-                <h2 style={{ fontFamily: 'Be Vietnam Pro', fontSize: 24, fontWeight: 800, color: 'var(--on-surface)', marginBottom: 16 }}>{lpConfig.title_3}</h2>
-              )}
-              {lpConfig.description_3 && (
-                <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
-                  {lpConfig.description_3}
-                </p>
-              )}
-            </div>
+          <section style={{ padding: '32px 24px', textAlign: 'center' }}>
+            {lpConfig.title_3 && (
+              <h2 style={{ fontFamily: 'Be Vietnam Pro', fontSize: 24, fontWeight: 800, color: 'var(--on-surface)', marginBottom: 16 }}>{lpConfig.title_3}</h2>
+            )}
+            {lpConfig.description_3 && (
+              <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+                {lpConfig.description_3}
+              </p>
+            )}
           </section>
         )}
 

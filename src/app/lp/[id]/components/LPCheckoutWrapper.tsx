@@ -13,9 +13,9 @@ export default function LPCheckoutWrapper({ product, config }: any) {
   }
 
   return (
-    <div id="checkout-form-section" style={{ background: 'var(--surface)', borderRadius: 24, padding: '24px 20px', boxShadow: '0 12px 32px rgba(0,0,0,0.08)' }}>
+    <div id="checkout-form-section" style={{ width: '100%', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--on-surface-variant)', marginTop: 4 }}> لإرسال طلبك أدخل معلوماتك أسفله    👇</p>
+        <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--on-surface-variant)' }}> لإرسال طلبك أدخل معلوماتك أسفله    👇</p>
       </div>
 
       <CheckoutForm

@@ -156,7 +156,7 @@ export default function CheckoutForm({ items, totalAmount, onSuccess, source = '
         </div>
       )}
 
-      <div className="checkout-step" style={{ background: 'var(--surface)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', marginBottom: 20 }}>
+      <div className="checkout-step" style={{ marginBottom: 20 }}>
 
         <div className="form-field" style={{ marginBottom: 16 }}>
           <input
@@ -357,7 +357,7 @@ export default function CheckoutForm({ items, totalAmount, onSuccess, source = '
         )}
       </div>
 
-      <div className="checkout-step" style={{ background: 'var(--surface)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div className="checkout-step" style={{ marginBottom: 20 }}>
 
         <div style={{ background: 'var(--surface-container-low)', borderRadius: 16, padding: 16, marginBottom: 20, border: '1px solid var(--outline-variant)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 14, color: 'var(--on-surface-variant)' }}>
