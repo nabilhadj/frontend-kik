@@ -70,8 +70,18 @@ export default function CheckoutForm({ items, totalAmount, onSuccess, source = '
   }, [selectedWilaya, deliveryType, deliveryConfig]);
 
   const filteredCommunes = deliveryConfig?.communes.filter(
-    c => selectedWilaya && c.wilaya_id === selectedWilaya.id
+    c => {
+      if (!selectedWilaya || c.wilaya_id !== selectedWilaya.id) return false;
+      if (deliveryType === 'stopdesk' && !c.has_stop_desk) return false;
+      return true;
+    }
   ) || [];
+
+  useEffect(() => {
+    if (deliveryType === 'stopdesk' && selectedCommune && !selectedCommune.has_stop_desk) {
+      setSelectedCommune(null);
+    }
+  }, [deliveryType, selectedCommune]);
 
   const grandTotal = totalAmount + shippingFee;
 
@@ -187,6 +197,37 @@ export default function CheckoutForm({ items, totalAmount, onSuccess, source = '
         ) : (
           <>
             <div className="form-field" style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryType('domicile')}
+                  style={{
+                    flex: 1, height: 46, borderRadius: 12,
+                    border: `1.5px solid ${deliveryType === 'domicile' ? 'var(--primary)' : 'var(--outline-variant)'}`,
+                    background: deliveryType === 'domicile' ? 'rgba(0,74,198,0.06)' : 'transparent',
+                    color: deliveryType === 'domicile' ? 'var(--primary)' : 'var(--on-surface-variant)',
+                    fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  توصيل للمنزل
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryType('stopdesk')}
+                  style={{
+                    flex: 1, height: 46, borderRadius: 12,
+                    border: `1.5px solid ${deliveryType === 'stopdesk' ? 'var(--primary)' : 'var(--outline-variant)'}`,
+                    background: deliveryType === 'stopdesk' ? 'rgba(0,74,198,0.06)' : 'transparent',
+                    color: deliveryType === 'stopdesk' ? 'var(--primary)' : 'var(--on-surface-variant)',
+                    fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  توصيل للمكتب
+                </button>
+              </div>
+            </div>
+
+            <div className="form-field" style={{ marginBottom: 16 }}>
               <select
                 className="form-input"
                 value={selectedWilaya?.id || ''}
@@ -225,36 +266,7 @@ export default function CheckoutForm({ items, totalAmount, onSuccess, source = '
               </div>
             )}
 
-            <div className="form-field" style={{ marginBottom: 0 }}>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  type="button"
-                  onClick={() => setDeliveryType('domicile')}
-                  style={{
-                    flex: 1, height: 46, borderRadius: 12,
-                    border: `1.5px solid ${deliveryType === 'domicile' ? 'var(--primary)' : 'var(--outline-variant)'}`,
-                    background: deliveryType === 'domicile' ? 'rgba(0,74,198,0.06)' : 'transparent',
-                    color: deliveryType === 'domicile' ? 'var(--primary)' : 'var(--on-surface-variant)',
-                    fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                >
-                  توصيل للمنزل
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDeliveryType('stopdesk')}
-                  style={{
-                    flex: 1, height: 46, borderRadius: 12,
-                    border: `1.5px solid ${deliveryType === 'stopdesk' ? 'var(--primary)' : 'var(--outline-variant)'}`,
-                    background: deliveryType === 'stopdesk' ? 'rgba(0,74,198,0.06)' : 'transparent',
-                    color: deliveryType === 'stopdesk' ? 'var(--primary)' : 'var(--on-surface-variant)',
-                    fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                >
-                  توصيل للمكتب
-                </button>
-              </div>
-            </div>
+
 
             {/* Custom Fields */}
             {customFields && customFields.length > 0 && (
