@@ -3,7 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "TechAccent | تيك أكسنت - ملحقات الجوال",
+  title: "KLIK |Accessoire mobile",
   description: "اكتشف أفضل ملحقات الجوال من كفرات وشواحن وسماعات بأعلى جودة وأفضل سعر",
 };
 
